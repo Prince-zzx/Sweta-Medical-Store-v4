@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweta Medical Store | Genuine Medicines</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { brand: '#ff6f61', brandDark: '#e65c50', lightBg: '#f6f6f6' } }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-lightBg font-sans text-gray-800">
+
+    <div class="bg-brand text-white text-xs md:text-sm py-1.5 px-4 text-center font-medium">
+        LATEST OFFER: Flat 15% OFF on all prescription medicines! Use code: SWETA15
+    </div>
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            
+            <div class="flex items-center space-x-2 min-w-max cursor-pointer" onclick="renderMedicines(medicines)">
+                <i class="fas fa-plus-square text-3xl text-brand"></i>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-gray-800 tracking-tight">Sweta Medical Store</h1>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider hidden md:block">Trust & Care in Goh</p>
+                </div>
+            </div>
+
+            <div class="hidden md:flex flex-1 max-w-2xl relative">
+                <div class="flex w-full border border-gray-300 rounded-sm overflow-hidden bg-gray-50 focus-within:border-brand focus-within:shadow-sm transition">
+                    <div class="flex items-center px-3 bg-white border-r border-gray-200">
+                        <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i><span class="text-sm text-gray-600">Goh</span>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Search for 50+ Medicines (e.g., Pan-D, Calpol)..." class="w-full py-2 px-3 text-sm focus:outline-none bg-transparent" onkeyup="handleSearch(this.value)">
+                    <button class="px-3 text-gray-500 hover:text-brand"><i class="fas fa-microphone"></i></button>
+                    <button class="bg-brand text-white px-6"><i class="fas fa-search"></i></button>
+                </div>
+                <div id="suggestionsBox" class="absolute top-full left-0 w-full bg-white border border-gray-200 shadow-lg rounded-b-md hidden z-50 max-h-60 overflow-y-auto"></div>
+            </div>
+
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <div class="hidden md:flex flex-col items-end">
+                    <span class="text-xs text-gray-500">Need Help?</span>
+                    <span class="text-sm font-bold text-gray-700">9162672683</span>
+                </div>
+                <button class="relative text-gray-700 hover:text-brand transition flex items-center">
+                    <i class="fas fa-shopping-cart text-2xl"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-2 bg-brand text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">0</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="md:hidden px-4 pb-3 relative">
+            <div class="flex w-full border border-gray-300 rounded-sm overflow-hidden bg-gray-50">
+                <input type="text" id="mobileSearchInput" placeholder="Search medicines..." class="w-full py-2 px-3 text-sm focus:outline-none bg-transparent" onkeyup="handleSearch(this.value)">
+            </div>
+            <div id="mobileSuggestionsBox" class="absolute top-full left-4 right-4 bg-white border border-gray-200 shadow-lg rounded-b-md hidden z-50 max-h-48 overflow-y-auto"></div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="sectionTitle" class="text-xl font-bold text-gray-800">All Available Medicines (50)</h2>
+        </div>
+        
+        <div id="medicineGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            </div>
+    </main>
+
+    <footer class="bg-white pt-12 pb-6 border-t border-gray-200 mt-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-2xl font-black text-gray-800 mb-2">Sweta Medical Store</h1>
+            <p class="text-sm text-gray-500 mb-4">Goh, Aurangabad, Bihar | Ph: 9162672683 | Email: offx.princekumar@gmail.com</p>
+            <p class="text-xs text-gray-400">© 2026 Sweta Medical Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 50 Famous Medicines List (Aap isme aur bhi add kar sakte hain baad mein)
+        const medicines = [
+            {name: "Dolo 650 Tablet", use: "Fever & Body Pain", price: 30, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Pan-D Capsule", use: "Gas & Acidity", price: 190, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Calpol 500 Tablet", use: "Mild Fever", price: 15, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Azithral 500 Tablet", use: "Bacterial Infection", price: 119, img: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=200&q=80"},
+            {name: "Omee Capsule", use: "Stomach Ulcers", price: 55, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Digene Syrup", use: "Acidity Relief", price: 140, img: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=200&q=80"},
+            {name: "Zincovit Tablet", use: "Multivitamin", price: 105, img: "https://images.unsplash.com/photo-1550572017-edb9b47e85da?w=200&q=80"},
+            {name: "Cheston Cold Tablet", use: "Cold & Cough", price: 42, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Monocef-O 200", use: "Antibiotic", price: 165, img: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=200&q=80"},
+            {name: "Allegra 120mg", use: "Allergy & Sneezing", price: 205, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Volini Spray", use: "Muscle Pain", price: 195, img: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=200&q=80"},
+            {name: "Electral ORS", use: "Dehydration", price: 22, img: "https://images.unsplash.com/photo-1577401239170-897942555fb3?w=200&q=80"},
+            {name: "Combiflam Tablet", use: "Pain & Inflammation", price: 35, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Crocin Advance", use: "Fast Pain Relief", price: 20, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Vicks Action 500", use: "Headache & Cold", price: 45, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Gelusil Liquid", use: "Heartburn & Gas", price: 125, img: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=200&q=80"},
+            {name: "Pudin Hara Pearls", use: "Stomach Ache", price: 30, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Eno Regular (Sachet)", use: "Instant Gas Relief", price: 10, img: "https://images.unsplash.com/photo-1577401239170-897942555fb3?w=200&q=80"},
+            {name: "Honitus Cough Syrup", use: "Ayurvedic Cough", price: 110, img: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=200&q=80"},
+            {name: "Saridon Tablet", use: "Severe Headache", price: 38, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Disprin Tablet", use: "Headache (Dissolvable)", price: 12, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Betadine Ointment", use: "Wounds & Cuts", price: 125, img: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=200&q=80"},
+            {name: "Norflox TZ", use: "Diarrhea & Infection", price: 95, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Meftal Spas", use: "Period Pain & Cramps", price: 46, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Okacet Tablet", use: "Runny Nose & Allergy", price: 18, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Levocet M", use: "Dust Allergy & Asthma", price: 140, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Pantocid DSR", use: "Chronic Acidity", price: 210, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Aciloc 150 Tablet", use: "Stomach Acid Reduction", price: 40, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Rantac 150 Tablet", use: "Gas Relief", price: 38, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Taxim-O 200", use: "Typhoid & Infection", price: 155, img: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=200&q=80"},
+            {name: "Augmentin 625 Duo", use: "Strong Antibiotic", price: 200, img: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=200&q=80"},
+            {name: "Supradyn Tablet", use: "Daily Energy & Vitamins", price: 55, img: "https://images.unsplash.com/photo-1550572017-edb9b47e85da?w=200&q=80"},
+            {name: "Revital H", use: "Stamina & Immunity", price: 320, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Neurobion Forte", use: "Nerve Health & B12", price: 35, img: "https://images.unsplash.com/photo-1550572017-edb9b47e85da?w=200&q=80"},
+            {name: "Limcee 500mg", use: "Vitamin C Chewable", price: 24, img: "https://images.unsplash.com/photo-1550572017-edb9b47e85da?w=200&q=80"},
+            {name: "Shelcal 500", use: "Calcium & Bone Health", price: 115, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Evion 400", use: "Vitamin E for Skin/Hair", price: 36, img: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&q=80"},
+            {name: "Dexorange Syrup", use: "Blood & Iron Tonic", price: 160, img: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=200&q=80"},
+            {name: "Liv.52 Syrup", use: "Liver Protection", price: 150, img: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=200&q=80"},
+            {name: "Cystone Tablet", use: "Kidney Stones", price: 135, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Septilin Tablet", use: "Immunity Booster", price: 160, img: "https://images.unsplash.com/photo-1550572017-edb9b47e85da?w=200&q=80"},
+            {name: "Koflet Syrup", use: "Dry & Wet Cough", price: 95, img: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=200&q=80"},
+            {name: "Voveran SR 100", use: "Severe Joint Pain", price: 110, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Zerodol SP", use: "Swelling & Pain", price: 118, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Nimesulide Tablet", use: "Quick Fever Reduction", price: 45, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Cetirizine 10mg", use: "General Allergy", price: 18, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Paracetamol 500", use: "Normal Fever", price: 10, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"},
+            {name: "Amoxyclav 625", use: "Infections", price: 185, img: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=200&q=80"},
+            {name: "Ofloxacin 200", use: "Urine/Stomach Infection", price: 85, img: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=200&q=80"},
+            {name: "Metrogyl 400", use: "Stomach Infection", price: 22, img: "https://images.unsplash.com/photo-1584308666744-24d5e478229b?w=200&q=80"}
+        ];
+
+        let cartItems = 0;
+        
+        // Cart Logic
+        function addToCart(name) {
+            cartItems++;
+            document.getElementById('cartCount').innerText = cartItems;
+            alert(name + " added to your cart!");
+        }
+
+        // Render Cards Automatically
+        function renderMedicines(list) {
+            const grid = document.getElementById('medicineGrid');
+            grid.innerHTML = ''; // Clear old items
+            document.getElementById('sectionTitle').innerText = list.length === medicines.length ? `All Available Medicines (${medicines.length})` : `Search Results (${list.length})`;
+
+            if (list.length === 0) {
+                grid.innerHTML = `<p class="text-red-500 font-bold col-span-full py-4">Sorry, no medicine found for this search.</p>`;
+                return;
+            }
+
+            list.forEach(med => {
+                const card = `
+                <div class="bg-white rounded hover:shadow-lg transition border border-gray-200 p-4 flex flex-col">
+                    <div class="h-24 w-full flex items-center justify-center mb-4 p-2 bg-gray-50 rounded">
+                        <img src="${med.img}" alt="${med.name}" class="max-h-full object-contain mix-blend-multiply">
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800 line-clamp-2 h-10">${med.name}</h3>
+                    <p class="text-[11px] text-gray-500 mb-2">Use: ${med.use}</p>
+                    <div class="mt-auto">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg text-gray-800">₹${med.price}</span>
+                            <button onclick="addToCart('${med.name}')" class="text-brand font-bold text-sm hover:text-brandDark">ADD</button>
+                        </div>
+                    </div>
+                </div>`;
+                grid.innerHTML += card;
+            });
+        }
+
+        // Search Autocomplete Logic
+        function handleSearch(query) {
+            const lowerQuery = query.toLowerCase();
+            const suggestionsBox = document.getElementById('suggestionsBox');
+            const mobileSuggestionsBox = document.getElementById('mobileSuggestionsBox');
+            
+            // Filter medicines based on name or use
+            const matches = medicines.filter(med => med.name.toLowerCase().includes(lowerQuery) || med.use.toLowerCase().includes(lowerQuery));
+
+            if (lowerQuery.length > 0 && matches.length > 0) {
+                let html = '';
+                matches.slice(0, 8).forEach(match => { // Show top 8 matches
+                    html += `<div class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700 border-b flex justify-between" 
+                             onclick="selectSuggestion('${match.name}')">
+                             <span>${match.name}</span> <span class="text-xs text-gray-400">${match.use}</span>
+                             </div>`;
+                });
+                
+                suggestionsBox.innerHTML = html;
+                mobileSuggestionsBox.innerHTML = html;
+                suggestionsBox.classList.remove('hidden');
+                mobileSuggestionsBox.classList.remove('hidden');
+            } else {
+                suggestionsBox.classList.add('hidden');
+                mobileSuggestionsBox.classList.add('hidden');
+            }
+
+            // Update grid in real-time
+            renderMedicines(matches);
+        }
+
+        // Select item from Dropdown
+        function selectSuggestion(name) {
+            document.getElementById('searchInput').value = name;
+            document.getElementById('mobileSearchInput').value = name;
+            document.getElementById('suggestionsBox').classList.add('hidden');
+            document.getElementById('mobileSuggestionsBox').classList.add('hidden');
+            
+            const match = medicines.filter(med => med.name === name);
+            renderMedicines(match);
+        }
+
+        // Run once when page loads
+        window.onload = () => renderMedicines(medicines);
+
+    </script>
+</body>
+</html>
